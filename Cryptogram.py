@@ -1,4 +1,5 @@
 f = open('dictionary.txt')
+#hello :]
 
 def main():
 
