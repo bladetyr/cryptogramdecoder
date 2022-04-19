@@ -26,7 +26,9 @@ def main():
       checkDictionary(decrypt(wordChecker[x]),x)
 
     for word in possibleMatches1:
+        oneWord = True
         #global conflict
+        #FIXME: need to add possibleMatches1 to solutions if only one word
         conflict = False
         solu = word
         #make dictionary
@@ -36,32 +38,78 @@ def main():
             workingDict[char] = wordChecker[0][count-1:count]
             count = count + 1
         for word2 in possibleMatches2:
+            #make temporrary dictionary for mapping checks
+            conflict = False #REMOVE THIS IF THIS DOESNT WORK
+            tempDict = workingDict.copy()
+            oneWord = False
             #find solutions for word 2
             solu = word
             count2 = 1
             for char in word2:
-                if(char in workingDict):                        
-                    if(wordChecker[1][count2-1:count2] != workingDict[char]):
-                        #conflict = True
-                        a = 1
+                tempDict[char] = wordChecker[1][count2-1:count2]
+                if(char in workingDict):   
+                    print("===")
+                    print(workingDict[char])
+                    print("===b")                
+                    print(char)
+                    print("===c")  
+                    if(str(wordChecker[1][count2-1:count2]) != str(workingDict[char])):
+                        conflict = True
+                        print("Conflict is True")
+                        print("Conflict: " + wordChecker[1][count2-1:count2] + " vs " + workingDict[char])
+                        #break
+                else:
+                    if wordChecker[1][count2-1:count2] in workingDict.values():
+                        conflict = True
                 count2 = count2+1
-            #FIXME: conflict is the problem; it's not getting inside this if statement
-            #so solutions never appends and solu has only one word
+            #if no conflict, add to solutions list
             if conflict == False:
+                print("Word added!")
+                print("Conflict is False")
                 solu = solu + " " + word2
                 print("UR MOM: " + solu)
-                solutions.append(solu)
-
-
-        #     for word3 in possibleMatches3:
+                print(tempDict)
+                if(len(wordChecker) == 2):
+                    solutions.append(solu)
+            #conflict = False
+            #== WORD 3 ==
+            if(conflict == False):
+                for word3 in possibleMatches3:
+                    threeWords = True
+                    tempDict2 = tempDict.copy()
+                    #make dictionary
+                    count3 = 1
+                    for char2 in word3:
+                        tempDict2[char2] = wordChecker[2][count3-1:count3]
+                        if(char2 in tempDict):    
+                            if(str(wordChecker[2][count3-1:count3]) != str(tempDict[char2])):
+                                conflict = True
+                                #print("Conflict is True")
+                                #print("Conflict: " + wordChecker[2][count3-1:count3] + " vs " + tempDict[char])
+                                #break
+                        else:
+                            if wordChecker[2][count3-1:count3] in tempDict.values():
+                                conflict = True
+                        count3 = count3+1
+                    if conflict == False:
+                        print("Word added! 3 Time")
+                        print("Conflict is False")
+                        solu = solu + " " + word3
+                        print("UR MOM: " + solu)
+                        solutions.append(solu)
+                    conflict = False
         #         for word4 in possibleMatches4:
         #             for word5 in possibleMatches5:
                         
     #if there is only one word, then this is all we have to do
     #checkDictionary(decrypt(en))
+    if(oneWord == True):
+        solutions = possibleMatches1
     print("Given: " + en)
     print("Solu: " + solu)
-    print(solutions)
+    print(len(solutions))
+    for s in solutions:
+        print(s)
     #print("Possible Matches: ")
     #print(possibleWords)
 
