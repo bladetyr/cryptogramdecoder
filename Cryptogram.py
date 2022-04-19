@@ -98,10 +98,34 @@ def main():
                         print("Word added! 3 Time")
                         print("Conflict is False")
                         solu = tempSolu + " " + word3
+                        tempSolu2 = solu
                         print("UR MOM: " + solu)
-                        solutions.append(solu)
-                    #conflict = False
-        #         for word4 in possibleMatches4:
+                        if(len(wordChecker) == 3):
+                            solutions.append(solu)
+                    if (conflict == False):
+                        for word4 in possibleMatches4:
+                            #== WORD 4==
+                            solu = tempSolu2
+                            conflict = False
+                            fourWords = True
+                            tempDict3 = tempDict2.copy()
+                            #make dictionary
+                            count4 = 1
+                            for char3 in word4:
+                                tempDict3[char3] = wordChecker[3][count3-1:count3]
+                                if(char3 in tempDict2):    
+                                    if(str(wordChecker[3][count4-1:count4]) != str(tempDict2[char3])):
+                                        conflict = True
+                                else:
+                                    if wordChecker[3][count4-1:count4] in tempDict2.values():
+                                        conflict = True
+                                count4 = count4+1
+                            if conflict == False:
+                                print("Word added! 4 Time")
+                                print("Conflict is False")
+                                solu = tempSolu2 + " " + word4
+                                print("UR MOM: " + solu)
+                                solutions.append(solu)
         #             for word5 in possibleMatches5:
                         
     #if there is only one word, then this is all we have to do
