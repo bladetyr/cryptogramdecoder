@@ -67,6 +67,7 @@ def main():
                 print("Word added!")
                 print("Conflict is False")
                 solu = solu + " " + word2
+                tempSolu = solu
                 print("UR MOM: " + solu)
                 print(tempDict)
                 if(len(wordChecker) == 2):
@@ -74,7 +75,9 @@ def main():
             #conflict = False
             #== WORD 3 ==
             if(conflict == False):
+                solu = tempSolu
                 for word3 in possibleMatches3:
+                    conflict = False
                     threeWords = True
                     tempDict2 = tempDict.copy()
                     #make dictionary
@@ -94,10 +97,10 @@ def main():
                     if conflict == False:
                         print("Word added! 3 Time")
                         print("Conflict is False")
-                        solu = solu + " " + word3
+                        solu = tempSolu + " " + word3
                         print("UR MOM: " + solu)
                         solutions.append(solu)
-                    conflict = False
+                    #conflict = False
         #         for word4 in possibleMatches4:
         #             for word5 in possibleMatches5:
                         
