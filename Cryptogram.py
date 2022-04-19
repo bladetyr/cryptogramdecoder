@@ -103,8 +103,8 @@ def main():
                         if(len(wordChecker) == 3):
                             solutions.append(solu)
                     if (conflict == False):
+                        #== WORD 4 ==
                         for word4 in possibleMatches4:
-                            #== WORD 4==
                             solu = tempSolu2
                             conflict = False
                             fourWords = True
@@ -112,7 +112,7 @@ def main():
                             #make dictionary
                             count4 = 1
                             for char3 in word4:
-                                tempDict3[char3] = wordChecker[3][count3-1:count3]
+                                tempDict3[char3] = wordChecker[3][count4-1:count4]
                                 if(char3 in tempDict2):    
                                     if(str(wordChecker[3][count4-1:count4]) != str(tempDict2[char3])):
                                         conflict = True
@@ -124,9 +124,33 @@ def main():
                                 print("Word added! 4 Time")
                                 print("Conflict is False")
                                 solu = tempSolu2 + " " + word4
+                                tempSolu3 = solu
                                 print("UR MOM: " + solu)
-                                solutions.append(solu)
-        #             for word5 in possibleMatches5:
+                                if(len(wordChecker) == 4):
+                                    solutions.append(solu)
+                            #== WORD 5 ==
+                            if (conflict == False):
+                                for word5 in possibleMatches5:
+                                    solu = tempSolu3
+                                    conflict = False
+                                    tempDict4 = tempDict3.copy()
+                                    #make dictionary
+                                    count5 = 1
+                                    for char4 in word5:
+                                        tempDict4[char4] = wordChecker[4][count5-1:count5]
+                                        if(char4 in tempDict3):    
+                                            if(str(wordChecker[4][count5-1:count5]) != str(tempDict3[char4])):
+                                                conflict = True
+                                        else:
+                                            if wordChecker[4][count5-1:count5] in tempDict3.values():
+                                                conflict = True
+                                        count5 = count5+1
+                                    if conflict == False:
+                                        print("Word added! 4 Time")
+                                        print("Conflict is False")
+                                        solu = tempSolu3 + " " + word5
+                                        print("UR MOM: " + solu)
+                                        solutions.append(solu)
                         
     #if there is only one word, then this is all we have to do
     #checkDictionary(decrypt(en))
@@ -137,8 +161,6 @@ def main():
     print(len(solutions))
     for s in solutions:
         print(s)
-    #print("Possible Matches: ")
-    #print(possibleWords)
 
 def decrypt(s):
     global currentDict
