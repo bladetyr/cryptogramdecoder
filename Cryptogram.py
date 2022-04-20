@@ -1,7 +1,6 @@
-#==GLOBAL VARIABLES==
+#== GLOBAL VARIABLES ==
 possibleWords = []
 currentDict = {}
-#conflict = False
 possibleMatches1 = []
 possibleMatches2 =[]
 possibleMatches3 = []
@@ -11,24 +10,20 @@ possibleMatches5 = []
 def main():
     workingDict = {}
     solutions = []
-    #global conflict
-    en =  input("Enter your cryptogram : ")
-    #words = en.split()
-    #new = en
-    #needed for decrypt; is ASCII value of A
-    #check how many words are in input
+    en =  input("Enter your Cryptogram: ")
+    #we need to check how many words are in input
     wordChecker = en.split()
     numWords = len(wordChecker)
-    #print(numWords)
     #let's now assume there are multiple words; check for a space
     for x in range(numWords):
-        #set up possible matches
+        #set up possible matches using checkDictionary (which uses the global lists)
       checkDictionary(decrypt(wordChecker[x]),x)
 
     for word in possibleMatches1:
+        #oneWord gets set to false if there is more than one word
+        #this is because of how we put solutions in solutions[]
+        #it's just easier this way, even if it's a bit ugly
         oneWord = True
-        #global conflict
-        #FIXME: need to add possibleMatches1 to solutions if only one word
         conflict = False
         solu = word
         #make dictionary
@@ -38,8 +33,8 @@ def main():
             workingDict[char] = wordChecker[0][count-1:count]
             count = count + 1
         for word2 in possibleMatches2:
-            #make temporrary dictionary for mapping checks
-            conflict = False #REMOVE THIS IF THIS DOESNT WORK
+            #make temp dictionary for mapping checks
+            conflict = False
             tempDict = workingDict.copy()
             oneWord = False
             #find solutions for word 2
@@ -47,38 +42,27 @@ def main():
             count2 = 1
             for char in word2:
                 tempDict[char] = wordChecker[1][count2-1:count2]
-                if(char in workingDict):   
-                    print("===")
-                    print(workingDict[char])
-                    print("===b")                
-                    print(char)
-                    print("===c")  
+                if(char in workingDict):    
                     if(str(wordChecker[1][count2-1:count2]) != str(workingDict[char])):
                         conflict = True
-                        print("Conflict is True")
-                        print("Conflict: " + wordChecker[1][count2-1:count2] + " vs " + workingDict[char])
-                        #break
                 else:
                     if wordChecker[1][count2-1:count2] in workingDict.values():
                         conflict = True
                 count2 = count2+1
-            #if no conflict, add to solutions list
+            #if no conflict in letter maps in the dictionary, add to solutions list
             if conflict == False:
-                print("Word added!")
-                print("Conflict is False")
                 solu = solu + " " + word2
                 tempSolu = solu
-                print("UR MOM: " + solu)
-                print(tempDict)
                 if(len(wordChecker) == 2):
                     solutions.append(solu)
-            #conflict = False
             #== WORD 3 ==
+            #we should only continue if there is no conflict
+            #having a conflict means there's an invalid solution
             if(conflict == False):
+                #we need to reset solu up here or else we'll have answers strung together
                 solu = tempSolu
                 for word3 in possibleMatches3:
                     conflict = False
-                    threeWords = True
                     tempDict2 = tempDict.copy()
                     #make dictionary
                     count3 = 1
@@ -87,27 +71,24 @@ def main():
                         if(char2 in tempDict):    
                             if(str(wordChecker[2][count3-1:count3]) != str(tempDict[char2])):
                                 conflict = True
-                                #print("Conflict is True")
-                                #print("Conflict: " + wordChecker[2][count3-1:count3] + " vs " + tempDict[char])
-                                #break
                         else:
                             if wordChecker[2][count3-1:count3] in tempDict.values():
                                 conflict = True
                         count3 = count3+1
+                    #conflict checking again
                     if conflict == False:
-                        print("Word added! 3 Time")
-                        print("Conflict is False")
+                        #add word3 to solu, which could be added to solutions
                         solu = tempSolu + " " + word3
                         tempSolu2 = solu
-                        print("UR MOM: " + solu)
                         if(len(wordChecker) == 3):
                             solutions.append(solu)
+                    #we should only continue if there is no conflict
+                    #having a conflict means there's an invalid solution
                     if (conflict == False):
                         #== WORD 4 ==
                         for word4 in possibleMatches4:
                             solu = tempSolu2
                             conflict = False
-                            fourWords = True
                             tempDict3 = tempDict2.copy()
                             #make dictionary
                             count4 = 1
@@ -121,14 +102,13 @@ def main():
                                         conflict = True
                                 count4 = count4+1
                             if conflict == False:
-                                print("Word added! 4 Time")
-                                print("Conflict is False")
                                 solu = tempSolu2 + " " + word4
                                 tempSolu3 = solu
-                                print("UR MOM: " + solu)
                                 if(len(wordChecker) == 4):
                                     solutions.append(solu)
                             #== WORD 5 ==
+                            #we should only continue if there is no conflict
+                            #having a conflict means there's an invalid solution
                             if (conflict == False):
                                 for word5 in possibleMatches5:
                                     solu = tempSolu3
@@ -146,18 +126,14 @@ def main():
                                                 conflict = True
                                         count5 = count5+1
                                     if conflict == False:
-                                        print("Word added! 4 Time")
-                                        print("Conflict is False")
                                         solu = tempSolu3 + " " + word5
-                                        print("UR MOM: " + solu)
                                         solutions.append(solu)
                         
-    #if there is only one word, then this is all we have to do
-    #checkDictionary(decrypt(en))
+    #printing the solution
     if(oneWord == True):
+        #printing is a bit different if there's only one word; mentioned above
         solutions = possibleMatches1
     print("Given: " + en)
-    print("Solu: " + solu)
     print(len(solutions))
     for s in solutions:
         print(s)
@@ -165,6 +141,9 @@ def main():
 def decrypt(s):
     global currentDict
     subst = {}
+    #lcount is the ASCII value of a; we use this to set the
+    #rhythym pattern of words
+    #EX: decrypt("ditto")->"abccd"
     lcount = 97
     for char in s:
         if char in subst:
@@ -172,26 +151,27 @@ def decrypt(s):
         else:
             subst[char] = lcount
             lcount = lcount + 1
+    #count is to keep track of substring-ing
     count = 0
     s = list(s)
     for let in s:
         s[count] = chr(subst.get(let))
-        #print(let)
-        #print(s)
         count = count + 1
-    #print(s)
-    #print(subst)
     currentDict = subst
     return s
 
 def resetDict(dict):
+    #easy reset for dictionary
+    #didn't save any lines of code but made it easier for me to read
     dict.clear()
 
-#brute force it 
-#1. substitute a letter, check if it is possible, continue substituting each letter
-#assuming there are still letters to substiture, check if possible every time
-#TODO: Figure out how to substitute a letter, use ASCII to add and subtract from it
 def checkDictionary(word, number):
+    '''
+    Takes in a word to check and a number. The number determines which list
+    of possible matches that the matches go in. We have a separate list for each
+    word (up to 5 can be decrypted at a time)
+    '''
+    #open dictionary.txt for reading purposes
     f = open('dictionary.txt','r')
     global possibleMatches1
     global possibleMatches2
@@ -199,12 +179,7 @@ def checkDictionary(word, number):
     global possibleMatches4
     global possibleMatches5
     for line in f:
-        #line = f.readLine()
         line = line.strip('\n')
-        #print("===")
-        #print(line)
-        #if not line:
-            #return False
         if (len(word) == len(line)):
             if(decrypt(word) == decrypt(line)):
                 if(number == 0):
@@ -217,6 +192,8 @@ def checkDictionary(word, number):
                     possibleMatches4.append(line)
                 elif(number == 4):
                     possibleMatches5.append(line)
+    #close dictionary.txt
     f.close()
   
+#call main to start decyrpting
 main()
